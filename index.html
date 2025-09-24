@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Money Manager X</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Biblioteca de ícones -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <!-- Cabeçalho fixo -->
+  <header class="cabecalho">
+    <div class="logo">
+      <h1>Money Manager X</h1>
+    </div>
+    <div class="icones">
+      <i data-lucide="bell"></i> <!-- ícone de notificações -->
+      <i data-lucide="settings"></i> <!-- ícone de configurações -->
+    </div>
+  </header>
+
+  <!-- Categorias fixas -->
+  <nav class="categorias">
+    <ul>
+      <li class="ativo">Resumo</li>
+      <li>Receitas</li>
+      <li>Despesas</li>
+      <li>Relatórios</li>
+    </ul>
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <main class="conteudo">
+    <!-- Resumo -->
+    <section id="resumo" class="secao">
+      <h2>Resumo Financeiro</h2>
+      <div class="cartoes">
+        <div class="cartao receita">
+          <h3>Receitas</h3>
+          <p id="total-receitas">R$ 0</p>
+        </div>
+        <div class="cartao despesa">
+          <h3>Despesas</h3>
+          <p id="total-despesas">R$ 0</p>
+        </div>
+        <div class="cartao saldo">
+          <h3>Saldo</h3>
+          <p id="saldo">R$ 0</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transações -->
+    <section id="transacoes" class="secao">
+      <h2>Transações</h2>
+      <ul class="lista-transacoes">
+        <!-- preenchido dinamicamente pelo JS -->
+      </ul>
+    </section>
+
+    <!-- Formulário -->
+    <section id="formulario" class="secao">
+      <h2>Adicionar Transação</h2>
+      <form id="form-transacao">
+        <input type="text" id="descricao" placeholder="Descrição da transação" required>
+        <input type="number" id="valor" placeholder="Valor (ex: -50 para despesa, 200 para receita)" required>
+        <button type="submit">Adicionar</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    lucide.createIcons(); // inicializa os ícones
+  </script>
+</body>
+</html>
