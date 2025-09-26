@@ -1,78 +1,274 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Money Manager X</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Biblioteca de ícones -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Cabeçalho fixo -->
-  <header class="cabecalho">
-    <div class="logo">
-      <h1>Money Manager X</h1>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="bg-primary text-white py-3 mb-4">
+            <div class="container">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-wallet me-2"></i>
+                    Controle Financeiro
+                </h1>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="container">
+            <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="geral-tab" data-bs-toggle="tab" data-bs-target="#geral" type="button" role="tab">
+                        <i class="fas fa-chart-line me-2"></i>Geral
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="metas-tab" data-bs-toggle="tab" data-bs-target="#metas" type="button" role="tab">
+                        <i class="fas fa-bullseye me-2"></i>Metas
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="transacoes-tab" data-bs-toggle="tab" data-bs-target="#transacoes" type="button" role="tab">
+                        <i class="fas fa-exchange-alt me-2"></i>Receitas e Despesas
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="mainTabContent">
+                
+                <!-- Aba Geral -->
+                <div class="tab-pane fade show active" id="geral" role="tabpanel">
+                    <div class="row">
+                        <!-- Saldo Atual -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-coins me-2"></i>Saldo Atual
+                                    </h5>
+                                    <h2 class="mb-0" id="saldoAtual">R$ 0,00</h2>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Total Receitas -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card bg-success text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-arrow-up me-2"></i>Receitas
+                                    </h5>
+                                    <h2 class="mb-0" id="totalReceitas">R$ 0,00</h2>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Total Despesas -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card bg-danger text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fas fa-arrow-down me-2"></i>Despesas
+                                    </h5>
+                                    <h2 class="mb-0" id="totalDespesas">R$ 0,00</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Gráfico -->
+                        <div class="col-md-8 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Receitas vs Despesas</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="chartReceitas" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Progresso das Metas -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Progresso das Metas</h5>
+                                </div>
+                                <div class="card-body" id="progressoMetas">
+                                    <p class="text-muted">Nenhuma meta cadastrada</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Últimas Transações -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Últimas Transações</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="ultimasTransacoes">
+                                <p class="text-muted">Nenhuma transação registrada</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aba Metas -->
+                <div class="tab-pane fade" id="metas" role="tabpanel">
+                    <div class="row">
+                        <!-- Formulário Nova Meta -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Nova Meta</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="formMeta">
+                                        <div class="mb-3">
+                                            <label for="nomeMeta" class="form-label">Nome da Meta</label>
+                                            <input type="text" class="form-control" id="nomeMeta" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="valorMeta" class="form-label">Valor Objetivo</label>
+                                            <input type="number" class="form-control" id="valorMeta" step="0.01" min="0" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="dataMeta" class="form-label">Data Limite</label>
+                                            <input type="date" class="form-control" id="dataMeta" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="categoriaMeta" class="form-label">Categoria</label>
+                                            <select class="form-select" id="categoriaMeta">
+                                                <option value="">Selecione...</option>
+                                                <option value="emergencia">Emergência</option>
+                                                <option value="viagem">Viagem</option>
+                                                <option value="casa">Casa</option>
+                                                <option value="educacao">Educação</option>
+                                                <option value="investimento">Investimento</option>
+                                                <option value="outros">Outros</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-plus me-2"></i>Adicionar Meta
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Lista de Metas -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Minhas Metas</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="listaMetas">
+                                        <p class="text-muted">Nenhuma meta cadastrada</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aba Receitas e Despesas -->
+                <div class="tab-pane fade" id="transacoes" role="tabpanel">
+                    <div class="row">
+                        <!-- Formulário Nova Transação -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Nova Transação</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="formTransacao">
+                                        <div class="mb-3">
+                                            <label for="tipoTransacao" class="form-label">Tipo</label>
+                                            <select class="form-select" id="tipoTransacao" required>
+                                                <option value="">Selecione...</option>
+                                                <option value="receita">Receita</option>
+                                                <option value="despesa">Despesa</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="descricaoTransacao" class="form-label">Descrição</label>
+                                            <input type="text" class="form-control" id="descricaoTransacao" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="valorTransacao" class="form-label">Valor</label>
+                                            <input type="number" class="form-control" id="valorTransacao" step="0.01" min="0" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="dataTransacao" class="form-label">Data</label>
+                                            <input type="date" class="form-control" id="dataTransacao" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="categoriaTransacao" class="form-label">Categoria</label>
+                                            <select class="form-select" id="categoriaTransacao">
+                                                <option value="">Selecione...</option>
+                                                <option value="alimentacao">Alimentação</option>
+                                                <option value="transporte">Transporte</option>
+                                                <option value="moradia">Moradia</option>
+                                                <option value="saude">Saúde</option>
+                                                <option value="educacao">Educação</option>
+                                                <option value="lazer">Lazer</option>
+                                                <option value="salario">Salário</option>
+                                                <option value="freelance">Freelance</option>
+                                                <option value="investimento">Investimento</option>
+                                                <option value="outros">Outros</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-plus me-2"></i>Adicionar Transação
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Lista de Transações -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Transações</h5>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="filtroTodos">Todos</button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" id="filtroReceitas">Receitas</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" id="filtroDespesas">Despesas</button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="listaTransacoes">
+                                        <p class="text-muted">Nenhuma transação registrada</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="icones">
-      <i data-lucide="bell"></i> <!-- ícone de notificações -->
-      <i data-lucide="settings"></i> <!-- ícone de configurações -->
-    </div>
-  </header>
 
-  <!-- Categorias fixas -->
-  <nav class="categorias">
-    <ul>
-      <li class="ativo">Resumo</li>
-      <li>Receitas</li>
-      <li>Despesas</li>
-      <li>Relatórios</li>
-    </ul>
-  </nav>
-
-  <!-- Conteúdo principal -->
-  <main class="conteudo">
-    <!-- Resumo -->
-    <section id="resumo" class="secao">
-      <h2>Resumo Financeiro</h2>
-      <div class="cartoes">
-        <div class="cartao receita">
-          <h3>Receitas</h3>
-          <p id="total-receitas">R$ 0</p>
-        </div>
-        <div class="cartao despesa">
-          <h3>Despesas</h3>
-          <p id="total-despesas">R$ 0</p>
-        </div>
-        <div class="cartao saldo">
-          <h3>Saldo</h3>
-          <p id="saldo">R$ 0</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Transações -->
-    <section id="transacoes" class="secao">
-      <h2>Transações</h2>
-      <ul class="lista-transacoes">
-        <!-- preenchido dinamicamente pelo JS -->
-      </ul>
-    </section>
-
-    <!-- Formulário -->
-    <section id="formulario" class="secao">
-      <h2>Adicionar Transação</h2>
-      <form id="form-transacao">
-        <input type="text" id="descricao" placeholder="Descrição da transação" required>
-        <input type="number" id="valor" placeholder="Valor (ex: -50 para despesa, 200 para receita)" required>
-        <button type="submit">Adicionar</button>
-      </form>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
-  <script>
-    lucide.createIcons(); // inicializa os ícones
-  </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
 </body>
 </html>
